@@ -64,6 +64,9 @@ public:
 	void	draw_circle( int x, int y, int r, const Color & );
 	void	draw_circle( int x, int y, int r, int, int, int );
 
+    void	put_unfilled_circle(int, int, int, Uint32);
+    void    put_unfilled_circle(int, int, int, const Color &);
+	void	put_unfilled_circle(int, int, int, int, int, int);
 	//------------------------------------------------------------------------
 	// Line drawing
 	//------------------------------------------------------------------------
@@ -87,11 +90,11 @@ public:
 	// Image drawing
 	//------------------------------------------------------------------------
 	void put_image(SDL_Surface *image, SDL_Rect *srcRect, SDL_Rect *dstRect);
-	void put_image(const Image & image, const Rect & dst, const Rect & src)
+	void put_image(const Image & image, const Rect & src, const Rect & dst)
 	{
 		SDL_Rect _dst = {dst.x, dst.y, dst.w, dst.h};
 		SDL_Rect _src = {src.x, src.y, src.w, src.h};
-		put_image(image.image, &_dst, &_src);
+		put_image(image.image, &_src, &_dst);
 	}
 	void put_image(const Image & image, const Rect & dst)
 	{

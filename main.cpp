@@ -67,7 +67,10 @@ void game()
     Star star[N];
     
     int alien_count = 0; // Checking when missle needs to fire
-    int num_aliens = 15; // Number of Aliens
+    int num_aliens = 9; // Number of Aliens
+    int aliens_postion = 0;
+    int alien_col = 5;
+    
     int num_missiles = 100; // Number of missles
     int w = 2, h = 6; // Missle size   
     int count = 0; // Animation for the explosion 
@@ -94,11 +97,11 @@ void game()
 	lives.y = 450;
 
     lost.x = 250;
-    lost.y = 220;
+    lost.y = 450;
 
     
     ships.x = 300;
-	ships.y = 415;
+	ships.y = H - 130;
  
     Object Stats;
     bool game_over = false;
@@ -142,19 +145,22 @@ void game()
         }
         if (alien.size() == 0)
         {
+            alien.clear();
             reset++;
         }
         if(reset == 20)
         {
             if(alien.size() == 0)
             {
-                for (int i = 0; i < 5; ++ i)
+                for (int i = 0; i < alien_col; ++ i)
                 {
                     for (int j = 0; j < num_aliens; j++)
                     {
-                        Rect a(40 + (j * 30), 10 + (i * 20), 38, 38, i);    
+                        Rect a(40 + (i * 30)+ (j * 30), 10 + (i * 20), 38, 38, i);    
                         alien.push_back(a);
+                        
                     }
+                    num_aliens -= 2;
                 }
              
                 for (int i = 0; i < alien.size(); ++i)
@@ -183,6 +189,10 @@ void game()
                 }
                 
             }
+
+            
+            num_aliens = 9 + (lvl * 2);           
+            alien_col ++;
             reset = 0;
         }
         // Begin aliens attacking/moving
@@ -484,7 +494,7 @@ void game()
         {
             star[i].update();
             
-            if (star[i].y() >= 450)
+            if (star[i].y() >= H)
             {
                 star[i].pos() = vec2i(rand() % W, 0);
             }

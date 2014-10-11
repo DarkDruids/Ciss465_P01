@@ -12,7 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <sstream>
-
+#include "stars.h"
 #include "Includes.h"
 #include "Constants.h"
 #include "compgeom.h"

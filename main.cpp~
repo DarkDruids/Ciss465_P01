@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
-// Game: Galaxian
-// By: Jeremy Edwards
+// Game: Guardians of the Galaxy 
+// By: Jeremy, Rotshak, Bruna
 //-----------------------------------------------------------------------------
 
 #include <iostream>
@@ -12,7 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <sstream>
-
+#include "stars.h"
 #include "Includes.h"
 #include "Constants.h"
 #include "compgeom.h"
@@ -29,7 +29,7 @@ void game()
 
     Sound explosion("sounds/explosion.wav");
 	Sound sound("sounds/laser.wav");
-    Music music("sounds/GameLoop.ogg");		// create music object from file
+    Musicx music("sounds/GameLoop.ogg");		// create music object from file
    
     music.play();
     
@@ -56,18 +56,19 @@ void game()
 	Font font("fonts/FreeMonoBold.ttf", 25); // Loads words
 	Color c = {255, 255, 0};
 
-    Image image(font.render("Lives:", c));
+    Image image(font.render("Lives:", c)); // Loads the text lives to screen
     Rect lives = image.getRect();
 
-    Image lose(font.render("You Lose!!!", c));
+    Image lose(font.render("You Lose!!!", c)); // prints You Lose!!!
     Rect lost = lose.getRect();
 
     const int N = 300;
+    
     Star star[N];
     
     int alien_count = 0; // Checking when missle needs to fire
     int num_aliens = 15; // Number of Aliens
-    int num_missles = 100; // Number of missles
+    int num_missiles = 100; // Number of missles
     int w = 2, h = 6; // Missle size   
     int count = 0; // Animation for the explosion 
     int ship_lives = 3; // How many lives a player has
@@ -78,7 +79,7 @@ void game()
     int r0 = 0;
     int score = 0;
     int lvl = 0;
-    int misslecd = 0;
+    int missilecd = 0;
     int reset = 19;
     int fire = 0;
     int timer= 0;
@@ -94,6 +95,8 @@ void game()
 
     lost.x = 250;
     lost.y = 220;
+
+    
     ships.x = 300;
 	ships.y = 415;
  
@@ -103,21 +106,21 @@ void game()
     bool laser_alive = false; // If Lasers are alive
     bool alien_alive = false;
     bool move = true;
-    bool missle_cooldown = true;
+    bool missile_cooldown = true;
     bool loaded = false;
     bool Extinguish = false;
     bool attack = false;
     bool test = true;
     
     std::vector <Rect> alien;
-    std::vector <Rect> missle;
-    std::vector <Rect> alien_missle;
+    std::vector <Rect> missile;
+    std::vector <Rect> alien_missile;
 
      
-    for (int i = 0; i < num_missles; i++)
+    for (int i = 0; i < num_missiles; i++)
     { 
         Rect l(0, 0, w, h);
-        missle.push_back(l);     
+        missile.push_back(l);     
     }
            
 	while (1)
@@ -126,7 +129,6 @@ void game()
         if (event.poll() && event.type() == QUIT) break; // exits game 
 
         Uint32 time = SDL_GetTicks();
-        
         
 		KeyPressed keypressed = get_keypressed(); // checks keypressed
 
@@ -166,12 +168,12 @@ void game()
                 for (int i = 0; i < 1 + lvl; i++)
                 { 
                     Rect m(0, 0, w, h);
-                    alien_missle.push_back(m);     
+                    alien_missile.push_back(m);     
                 }
                 
-                for(int i = 0; i < alien_missle.size(); ++i)
+                for(int i = 0; i < alien_missile.size(); ++i)
                 {
-                    alien_missle[i].move = false;
+                    alien_missile[i].move = false;
                 }
                 
                 for (int i = 0; i < N; i++)
@@ -187,7 +189,7 @@ void game()
         if (a == 50 - lvl)
         {
             
-            for (int i = 0; i < alien_missle.size(); ++i)
+            for (int i = 0; i < alien_missile.size(); ++i)
             {
                 if (alien.size() > 0)
                 {
@@ -195,9 +197,9 @@ void game()
                 }
                 for (int j = 0; j < alien.size(); ++j)
                 {
-                    alien_missle[i].x = alien[n].x + 14;
-                    alien_missle[i].y = alien[n].y + 25;
-                    alien_missle[i].move = true;
+                    alien_missile[i].x = alien[n].x + 14;
+                    alien_missile[i].y = alien[n].y + 25;
+                    alien_missile[i].move = true;
                 }
             }
             alien_count = 0;
@@ -205,17 +207,17 @@ void game()
 
        
          
-        for (int i = 0; i < alien_missle.size(); ++i)
+        for (int i = 0; i < alien_missile.size(); ++i)
         {
-            if(alien_missle[i].move == true)
+            if(alien_missile[i].move == true)
             {
-                if(alien_missle[i].y > 450)
+                if(alien_missile[i].y > 450)
                 {
-                    alien_missle[i].move = false;
+                    alien_missile[i].move = false;
                 }
                 else
                 {
-                alien_missle[i].y += 3;
+                alien_missile[i].y += 3;
                 }
             }
         }
@@ -265,9 +267,9 @@ void game()
                     
                     if (a == 170)
                     {
-                        alien_missle[fire].x = alien[i].x + 14;
-                        alien_missle[fire].y = alien[i].y + 25;
-                        alien_missle[fire].move = true;
+                        alien_missile[fire].x = alien[i].x + 14;
+                        alien_missile[fire].y = alien[i].y + 25;
+                        alien_missile[fire].move = true;
                     }
                     alien[i].y += 1 + lvl % 2;
                     
@@ -291,7 +293,7 @@ void game()
             {
                 f = rand() % alien.size();
                 r0 = alien[f].y;
-                fire = rand() % alien_missle.size();
+                fire = rand() % alien_missile.size();
                 
             }
             attack = true;
@@ -350,11 +352,11 @@ void game()
         // end of work on the ship
 
         // Start work on missle
-        if (misslecd < 0)
+        if (missilecd < 0)
         {
             if (keypressed[SPACE]) // Sets the x, y for the missle and sound for missle
             {
-                if (ship_alive && missle_cooldown)
+                if (ship_alive && missile_cooldown)
                 {
                     
                     sound.play();
@@ -362,10 +364,10 @@ void game()
                     
                     
                   
-                    missle[f].x = ships.x + 15;
-                    missle[f].y = ships.y + 2 - (1 * 10);
+                    missile[f].x = ships.x + 15;
+                    missile[f].y = ships.y + 2 - (1 * 10);
 
-                    if (f < missle.size())
+                    if (f < missile.size())
                     {   
                         f++;
                     }
@@ -373,31 +375,31 @@ void game()
                     {
                         f = 0;
                     }
-                    missle_cooldown = false;
+                    missile_cooldown = false;
                     loaded = false;
                     
-                    misslecd = 20;
+                    missilecd = 20;
                 }
                 
             }
         }
         // Destroys the missle when its < 0
-        for (int i = 0; i < missle.size(); ++i)
+        for (int i = 0; i < missile.size(); ++i)
         {
-            if(missle[i].y < 0)
+            if(missile[i].y < 0)
             {
                 laser_alive = false;
-                missle_cooldown = true;
+                missile_cooldown = true;
             }
         }
-        // end or work on missles
+        // end or work on missiles
         
         // Checks if something collided!!
-        for(int j = 0; j < missle.size(); ++j) 
+        for(int j = 0; j < missile.size(); ++j) 
         {
             for (int i = 0; i < alien.size(); ++i)
             { 
-                if ( missle[j].collide(alien[i]))
+                if ( missile[j].collide(alien[i]))
                 {
                     if (alien[i].move == true)
                     {
@@ -405,9 +407,9 @@ void game()
                         attack = false;
                         a = 0;
                     }
-                    if (alien.size() <= alien_missle.size())
+                    if (alien.size() <= alien_missile.size())
                     {
-                        alien_missle.erase(alien_missle.begin());
+                        alien_missile.erase(alien_missile.begin());
                     }
                     if(alien[i].color < 1) 
                     {
@@ -426,32 +428,32 @@ void game()
                     
                     if(alien[i].color >= 3) 
                     {
-                        score+= 5;
+                        score += 5;
                     }
                
             
  
                     alien.erase(alien.begin() + i);
-                    missle[j].x = 0;
-                    missle[j].y = 0;
-                    missle_cooldown = true;
+                    missile[j].x = 0;
+                    missile[j].y = 0;
+                    missile_cooldown = true;
                    
                 }
             }
         }
 
         
-        // Checks if Alien Missle has collided with ship
-        for(int j = 0; j < alien_missle.size(); ++j) 
+        // Checks if Alien Missile has collided with ship
+        for(int j = 0; j < alien_missile.size(); ++j) 
         {
-                if (alien_missle[j].collide(ships))
+                if (alien_missile[j].collide(ships))
                 {
                     explosion.play();
                     delay(10);
                     ship_alive = false;
-                    alien_missle[j].x = 0;
-                    alien_missle[j].y = 0;
-                    alien_missle[j] = false;
+                    alien_missile[j].x = 0;
+                    alien_missile[j].y = 0;
+                    alien_missile[j] = false;
                     ship_lives--;
                 }
             
@@ -465,8 +467,8 @@ void game()
                     delay(10);
                     alien.erase(alien.begin() + j);
                     ship_alive = false;
-                    alien_missle[j].x = 0;
-                    alien_missle[j].y = 0;
+                    alien_missile[j].x = 0;
+                    alien_missile[j].y = 0;
                     attack = false;
                     a = 0;
                     ship_lives--;
@@ -528,20 +530,20 @@ void game()
         // explosion chain ends
      
             
-        for (int i = 0; i < alien_missle.size(); ++i)
+        for (int i = 0; i < alien_missile.size(); ++i)
         {
-            if (alien_missle[i].move && !game_over)
+            if (alien_missile[i].move && !game_over)
             {
-                surface.put_rect(alien_missle[i].x, alien_missle[i].y, w, h, 255, 0 , 0); // draws lasers
+                surface.put_rect(alien_missile[i].x, alien_missile[i].y, w, h, 255, 0 , 0); // draws lasers
             }
         }
         
         
         if (ship_alive) // Draws laser as long as its in permators
         {
-            for (int i = 0; i < missle.size(); ++i)
+            for (int i = 0; i < missile.size(); ++i)
             {
-                surface.put_rect(missle[i].x, missle[i].y -= 10, w, h, 150, 150 , 150); // draws lasers
+                surface.put_rect(missile[i].x, missile[i].y -= 10, w, h, 150, 150 , 150); // draws lasers
             }
         }
         
@@ -604,7 +606,7 @@ void game()
         }
         ++a;
         
-        --misslecd;
+        --missilecd;
     }
     
 	return;

@@ -72,7 +72,7 @@ public:
         Image scoretext(font.render("SCORE: ",c));
         Rect score_text = scoretext.getRect();
         score_text.x = 250;
-        score_text.y = H - 35;
+        score_text.y = 450;
         
         surface.put_image(scoretext, score_text);
         
@@ -83,7 +83,7 @@ public:
         Image yourscore(font.render(strmsc.str().c_str(), b));
         Rect your_score = yourscore.getRect();
         your_score.x = 340;
-        your_score.y = H - 35;
+        your_score.y = 450;
         
         surface.put_image(yourscore, your_score);
     }
@@ -98,7 +98,7 @@ public:
         Image imagelevel(font.render("Level: ",c));
         Rect leveltext = imagelevel.getRect();
         leveltext.x = 480;
-        leveltext.y = H - 35;
+        leveltext.y = 450;
         
         surface.put_image(imagelevel, leveltext);
         
@@ -109,7 +109,7 @@ public:
         Image leveler(font.render(strmsc.str().c_str(), b));
         Rect levels = leveler.getRect();
         levels.x = 575;
-        levels.y = H - 35;
+        levels.y = 450;
         
         surface.put_image(leveler, levels);
     }

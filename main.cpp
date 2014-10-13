@@ -86,16 +86,16 @@ void game()
     int reset = 19; // resets the aliens
     int fire = 0; // this fires and alien missle
     int timer= 0; // keeps time
-    
-    Live.x = 105; // This needs to change
-    Live.y = H - 35; 
-    
-    Alive.x = 80;
-    Alive.y = H - 35;
-    
+       
 	lives.x = 0;
 	lives.y = H - 35;
 
+    Alive.x = lives.x + 80;
+    Alive.y = H - 35;
+   
+    Live.x = 105; // This needs to change
+    Live.y = H - 35; 
+  
     lost.x = 250;
     lost.y = H - 35; // all the way to here
 
@@ -236,7 +236,7 @@ void game()
                 }
                 else
                 {
-                alien_missile[i].y += 3;
+                    alien_missile[i].y += 2;
                 }
             }
         }
@@ -351,7 +351,7 @@ void game()
         {
             if (keypressed[RIGHTARROW]) // Moves SpaceShip Right
             {
-                if (ships.x > 610)
+                if (ships.x > W - 32)
                 {
                     ships_x = 0;
                 }
@@ -450,8 +450,7 @@ void game()
                         score += 5;
                     }
                
-            
- 
+             
                     alien.erase(alien.begin() + i);
                     missile[j].x = 0;
                     missile[j].y = 0;

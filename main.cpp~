@@ -24,7 +24,7 @@
 
 void game()
 {
-	Surface surface(10000, 10000);
+	Surface surface(W, H);
 	Event event;
 
     Sound explosion("sounds/explosion.wav");
@@ -62,64 +62,67 @@ void game()
     Image lose(font.render("You Lose!!!", c)); // prints You Lose!!!
     Rect lost = lose.getRect();
 
-    const int N = 300;
+    const int N = 500;
     
     Star star[N];
     
     int alien_count = 0; // Checking when missle needs to fire
     int num_aliens = 9; // Number of Aliens
-    int aliens_postion = 0;
-    int alien_col = 5;
+    int aliens_postion = 0; // where the aliens are located on he screen
+    int alien_rows = 5; // tells home me rows per level
     
     int num_missiles = 100; // Number of missles
     int w = 2, h = 6; // Missle size   
     int count = 0; // Animation for the explosion 
     int ship_lives = 3; // How many lives a player has
     int ships_x; // Allows you to move
-    int n = 0;
-    int a = 0;
-    int f = 0;
-    int r0 = 0;
-    int score = 0;
-    int lvl = 0;
-    int missilecd = 0;
-    int reset = 19;
-    int fire = 0;
-    int timer= 0;
-    
-    Live.x = 105;
-    Live.y = 450;
-    
-    Alive.x = 80;
-    Alive.y = 450;
-    
+    int n = 0;  // sends the a random alien to attack
+    int a = 0; // tells when the alien to move down on screen
+    int f = 0;  // Picks the random alien to move down 
+    int r0 = 0;  // Moves the alien back to its orignal spot
+    int score = 0; // The score of the player
+    int lvl = 0; // the level the player is on
+    int missilecd = 0; // cool down on the missles
+    int reset = 19; // resets the aliens
+    int fire = 0; // this fires and alien missle
+    int timer= 0; // keeps time
+       
 	lives.x = 0;
-	lives.y = 450;
+	lives.y = H - 35;
 
+    Alive.x = lives.x + 80;
+    Alive.y = H - 35;
+   
+    Live.x = 105; // This needs to change
+    Live.y = H - 35; 
+  
     lost.x = 250;
-    lost.y = 220;
+    lost.y = H - 35; // all the way to here
 
     
     ships.x = 300;
-	ships.y = 415;
+	ships.y = H - 70; 
  
     Object Stats;
-    bool game_over = false;
+    bool game_over = false; // end the game
     bool ship_alive = true; // If ship is alive
     bool laser_alive = false; // If Lasers are alive
-    bool alien_alive = false;
-    bool move = true;
-    bool missile_cooldown = true;
-    bool loaded = false;
-    bool Extinguish = false;
-    bool attack = false;
-    bool test = true;
+    bool alien_alive = false; // sets aliens to alive
+    bool move = true; // tells the alien which way to travel 
+    bool missile_cooldown = true; // missile cool down
+    bool loaded = false; // missiles are loaded and ready to fire
+    bool Extinguish = false; // missile gets destoryed
+    bool attack = false; //
     
+    //-------------------------------------------------------------------
+    // This makes a vector for each of the following aliens missils
+    // and the alien_missiles
+    //-------------------------------------------------------------------
     std::vector <Rect> alien;
     std::vector <Rect> missile;
     std::vector <Rect> alien_missile;
 
-     
+    // setting the amount of missles the player gets to fire in  a vector
     for (int i = 0; i < num_missiles; i++)
     { 
         Rect l(0, 0, w, h);
@@ -131,7 +134,7 @@ void game()
 
         if (event.poll() && event.type() == QUIT) break; // exits game 
 
-        Uint32 time = SDL_GetTicks();
+        Uint32 time = SDL_GetTicks(); // helps with frames per second
         
 		KeyPressed keypressed = get_keypressed(); // checks keypressed
 
@@ -148,15 +151,20 @@ void game()
             alien.clear();
             reset++;
         }
+
+        //---------------------------------------------------------------------
+        // creates new aliens for the level they are on
+        //---------------------------------------------------------------------
         if(reset == 20)
         {
             if(alien.size() == 0)
             {
-                for (int i = 0; i < alien_col; ++ i)
+                for (int i = 0; i < alien_rows; ++ i)
                 {
                     for (int j = 0; j < num_aliens; j++)
                     {
-                        Rect a(40 + (i * 30)+ (j * 30), 10 + (i * 20), 38, 38, i);    
+                        Rect a(40 + (i * 30)+ (j * 30), 10 +
+                               (i * 20), 38, 38, i);    
                         alien.push_back(a);
                         
                     }
@@ -192,10 +200,11 @@ void game()
 
             
             num_aliens = 9 + (lvl * 2);           
-            alien_col ++;
+            alien_rows++;
             reset = 0;
         }
-        // Begin aliens attacking/moving
+        
+        // Begin aliens attacking / moving
         if (a == 50 - lvl)
         {
             
@@ -221,7 +230,7 @@ void game()
         {
             if(alien_missile[i].move == true)
             {
-                if(alien_missile[i].y > 450)
+                if(alien_missile[i].y > H - 35)
                 {
                     alien_missile[i].move = false;
                 }
@@ -241,7 +250,7 @@ void game()
             }
             for (int i = 0; i < alien.size(); i++)
             {
-                if(alien[i].x == 610)
+                if(alien[i].x == W - 30)
                 {
                     move = false;
                 }
@@ -283,7 +292,7 @@ void game()
                     }
                     alien[i].y += 1 + lvl % 2;
                     
-                    if (alien[i].y > 420)
+                    if (alien[i].y > H - 35)
                     {
                         alien[i].y = 0;  
                     } 
@@ -441,8 +450,7 @@ void game()
                         score += 5;
                     }
                
-            
- 
+             
                     alien.erase(alien.begin() + i);
                     missile[j].x = 0;
                     missile[j].y = 0;
@@ -494,7 +502,7 @@ void game()
         {
             star[i].update();
             
-            if (star[i].y() >= 450)
+            if (star[i].y() >= H)
             {
                 star[i].pos() = vec2i(rand() % W, 0);
             }
